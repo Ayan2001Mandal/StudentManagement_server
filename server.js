@@ -16,6 +16,11 @@ app.get('/api', (req, res) => {
   res.send("server is on at 8080");
 });
 
+app.use((req, res, next) => {
+  console.log(`Incoming ${req.method} request to ${req.url}`);
+  next();
+});
+
 app.use('/api', router); // ✅ Includes everything from /router/index.js
 
 app.listen(port, () => {
