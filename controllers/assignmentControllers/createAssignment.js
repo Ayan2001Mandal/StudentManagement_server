@@ -25,7 +25,7 @@ const createAssignment = async (req, res) => {
       description,
       dueDate: new Date(dueDate.trim()),
       attachedFileUrl: req.file.path, // Cloudinary returns `path` 
-      createdBy: req.user.id,
+      createdBy: req.user._id,
     });
 
     await newAssignment.save();
