@@ -1,30 +1,47 @@
+const mongoose = require('mongoose');
 const Assignment = require('../../models/assignmentModel');
 
 const deleteAssignment = async (req, res) => {
   try {
     const { id } = req.params;
+    const userId = req.user._id;
+
+    console.log(`Attempting to delete assignment ${id} by user ${userId}`); // Debug log
 
     // Validate the ID format
     if (!mongoose.Types.ObjectId.isValid(id)) {
+      console.log('Invalid ID format:', id); // Debug log
       return res.status(400).json({
         success: false,
-        error: 'Invalid assignment ID'
+        error: 'Invalid assignment ID format'
       });
     }
 
-    // Find and delete the assignment
+    // First check if assignment exists (without authorization check)
+    const assignmentExists = await Assignment.findById(id);
+    if (!assignmentExists) {
+      console.log('Assignment not found:', id); // Debug log
+      return res.status(404).json({
+        success: false,
+        error: 'Assignment not found'
+      });
+    }
+
+    // Then verify authorization and delete
     const deletedAssignment = await Assignment.findOneAndDelete({
       _id: id,
-      createdBy: req.user._id // Ensure only the creator can delete
+      createdBy: userId
     });
 
     if (!deletedAssignment) {
-      return res.status(404).json({
+      console.log('Authorization failed - User:', userId, 'Assignment creator:', assignmentExists.createdBy); // Debug log
+      return res.status(403).json({
         success: false,
-        error: 'Assignment not found or you are not authorized to delete it'
+        error: 'You are not authorized to delete this assignment'
       });
     }
 
+    console.log('Successfully deleted assignment:', deletedAssignment._id); // Debug log
     res.status(200).json({
       success: true,
       message: 'Assignment deleted successfully',
@@ -35,10 +52,11 @@ const deleteAssignment = async (req, res) => {
     });
 
   } catch (err) {
-    console.error(err);
+    console.error('Delete assignment error:', err);
     res.status(500).json({
       success: false,
-      error: 'Server Error'
+      error: 'Server Error',
+      details: process.env.NODE_ENV === 'development' ? err.message : undefined
     });
   }
 };
