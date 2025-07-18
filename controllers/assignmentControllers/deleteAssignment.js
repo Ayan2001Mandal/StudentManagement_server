@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Assignment = require('../../models/assignmentModel');
+const Submission = require('../../models/submissionModel'); 
 
 const deleteAssignment = async (req, res) => {
   try {
@@ -14,17 +15,16 @@ const deleteAssignment = async (req, res) => {
       });
     }
 
-    // First check if assignment exists (without authorization check)
+    // Check if assignment exists
     const assignmentExists = await Assignment.findById(id);
     if (!assignmentExists) {
-
       return res.status(404).json({
         success: false,
         error: 'Assignment not found'
       });
     }
 
-    // Then verify authorization and delete
+    // Authorization check and delete
     const deletedAssignment = await Assignment.findOneAndDelete({
       _id: id,
       createdBy: userId
@@ -37,10 +37,12 @@ const deleteAssignment = async (req, res) => {
       });
     }
 
+    // Delete all related submissions
+    await Submission.deleteMany({ assignmentId: id });
 
     res.status(200).json({
       success: true,
-      message: 'Assignment deleted successfully',
+      message: 'Assignment and its submissions deleted successfully',
       data: {
         id: deletedAssignment._id,
         title: deletedAssignment.title
