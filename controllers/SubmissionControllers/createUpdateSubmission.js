@@ -47,6 +47,7 @@ const createUpdateSubmission = async (req, res) => {
     });
 
     return res.status(201).json({
+      success: true,
       message: 'Submission successful.',
       submission
     });

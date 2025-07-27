@@ -33,6 +33,7 @@ const gradeSubmission = async (req, res) => {
     await submission.save();
 
     res.status(200).json({
+      success: true,  
       message: 'Submission graded successfully',
       submission: {
         _id: submission._id,

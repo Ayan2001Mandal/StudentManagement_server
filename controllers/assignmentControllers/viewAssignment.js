@@ -6,7 +6,8 @@ const getAllAssignments = async (req, res) => {
     const currentDate = new Date();
     
     const assignments = await Assignment.find()
-      .sort({ createdAt: -1 })
+    .sort({ createdAt: -1 })
+      // .sort({ dueDate: 1 })
       .populate({
         path: 'createdBy',
         select: 'fname lname email' // Changed to match your schema

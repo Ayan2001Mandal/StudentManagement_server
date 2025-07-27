@@ -16,6 +16,7 @@ const getMyGradeForAssignment = async (req, res) => {
     }
 
     res.status(200).json({
+      success: true,
       assignmentId,
       grade: submission.grade,
       feedback: submission.feedback,

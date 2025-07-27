@@ -8,10 +8,11 @@ const getSubmissionsByAssignment = async (req, res) => {
     const assignmentObjectId = new mongoose.Types.ObjectId(id);
 
     const submissions = await Submission.find({ assignmentId: assignmentObjectId })
-      .populate('studentId', 'name email')
+      .populate('studentId', 'fname lname email')
       .sort({ submittedAt: 1 });
 
     res.status(200).json({
+      success: true,
       count: submissions.length,
       submissions
     });

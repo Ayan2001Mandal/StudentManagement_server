@@ -34,6 +34,7 @@ const register = async (req, res) => {
     await newUser.save();
 
     res.status(201).json({
+      success :'true',
       message: 'User registered successfully',
       user: {
         _id: newUser._id,

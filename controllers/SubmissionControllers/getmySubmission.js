@@ -9,6 +9,7 @@ const getMySubmissions = async (req, res) => {
       .sort({ submittedAt: -1 });
 
     res.status(200).json({
+      success: true,
       count: submissions.length,
       submissions
     });

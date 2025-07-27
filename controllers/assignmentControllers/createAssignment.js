@@ -31,6 +31,7 @@ const createAssignment = async (req, res) => {
     await newAssignment.save();
 
     res.status(201).json({
+      success:'true',
       message: 'Assignment created successfully!',
       assignment: newAssignment
     });

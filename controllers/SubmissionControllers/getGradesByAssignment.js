@@ -20,6 +20,7 @@ const getGradesByAssignment = async (req, res) => {
     }));
 
     res.status(200).json({
+      success: true,
       assignmentId,
       submissions: formatted
     });
